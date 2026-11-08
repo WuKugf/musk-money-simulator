@@ -1,0 +1,98 @@
+/* =========================================================
+   effects.css · 粒子画布与 CSS 动画兜底
+   （GSAP 加载失败时，motion.js 会给元素加 .fx-* 类）
+   ========================================================= */
+
+#fx-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ---------- 入场 ---------- */
+@keyframes fxInKey {
+  0%   { opacity: 0; transform: translateY(18px) scale(.86); }
+  62%  { opacity: 1; transform: translateY(-3px) scale(1.015); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.fx-in {
+  animation: fxInKey .52s cubic-bezier(.22, 1.14, .36, 1) both;
+}
+
+/* ---------- 退场 ---------- */
+@keyframes fxOutKey {
+  0%   { opacity: 1; transform: scale(1) translateY(0); }
+  100% { opacity: 0; transform: scale(.9) translateY(-14px); }
+}
+
+.fx-out {
+  animation: fxOutKey .24s ease-in both;
+}
+
+/* ---------- 抖动（余额不足等） ---------- */
+@keyframes fxShakeKey {
+  0%, 100% { transform: translateX(0); }
+  15%      { transform: translateX(-5px) rotate(-.3deg); }
+  32%      { transform: translateX(4px) rotate(.3deg); }
+  48%      { transform: translateX(-3px); }
+  64%      { transform: translateX(2px); }
+  80%      { transform: translateX(-1px); }
+}
+
+.fx-shake {
+  animation: fxShakeKey .42s ease-in-out both;
+}
+
+/* ---------- 脉冲（资金数字变化） ---------- */
+@keyframes fxPulseKey {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.045); }
+  100% { transform: scale(1); }
+}
+
+.fx-pulse {
+  animation: fxPulseKey .5s cubic-bezier(.22, 1.2, .36, 1) both;
+  display: inline-block;
+}
+
+/* ---------- 成就徽章小闪光 ---------- */
+@keyframes fxGlowKey {
+  0%   { box-shadow: 0 0 0 0 rgba(243, 167, 18, .5); }
+  100% { box-shadow: 0 0 0 14px rgba(243, 167, 18, 0); }
+}
+
+.fx-glow {
+  animation: fxGlowKey .9s ease-out both;
+}
+
+/* ---------- 金额扣减时的红色浮字 ---------- */
+.float-cost {
+  position: fixed;
+  z-index: 88;
+  pointer-events: none;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--coral-deep);
+  text-shadow: 0 2px 8px rgba(255, 255, 255, .9);
+  animation: floatCostKey .95s cubic-bezier(.2, .8, .3, 1) both;
+}
+
+@keyframes floatCostKey {
+  0%   { opacity: 0; transform: translateY(4px) scale(.9); }
+  22%  { opacity: 1; transform: translateY(-6px) scale(1); }
+  100% { opacity: 0; transform: translateY(-38px) scale(.96); }
+}
+
+/* ---------- 空态/加载过渡 ---------- */
+@keyframes spinSlow {
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  display: inline-block;
+  animation: spinSlow 1s linear infinite;
+}

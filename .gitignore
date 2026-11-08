@@ -1,0 +1,19 @@
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+.vscode/
+.idea/
+*.iml
+
+# 日志
+*.log
+
+# 如果本地用打包/预览工具，产生的目录不入库
+node_modules/
+dist/
+.cache/
+
+# 注意：src/data/products.js 是数据文件，必须保留在仓库里

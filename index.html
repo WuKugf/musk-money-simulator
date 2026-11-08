@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#FBF7EF">
+<meta name="description" content="花光马斯克的钱 · 一个纯前端的虚拟花钱解压模拟器，全部为虚拟娱乐设定，不涉及真实交易。">
+<title>花光马斯克的钱 · 虚拟花钱模拟器</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%B8%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="styles/layout.css">
+<link rel="stylesheet" href="styles/cards.css">
+<link rel="stylesheet" href="styles/effects.css">
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- ===== 顶部：品牌 + 资金面板 + 搜索 + 分类 ===== -->
+  <header class="app-head">
+    <div class="head-main">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">💸</div>
+        <div class="brand-text">
+          <h1>花光马斯克的钱</h1>
+          <p>虚拟资金 · 仅供娱乐</p>
+        </div>
+      </div>
+
+      <div class="funds" id="funds">
+        <div class="fund fund--main">
+          <div class="fund-label">剩余资产</div>
+          <div class="fund-value" id="fund-balance">¥0</div>
+          <div class="fund-sub" id="fund-balance-sub">虚拟设定：约 4000 亿美元</div>
+        </div>
+        <div class="fund">
+          <div class="fund-label">已花掉</div>
+          <div class="fund-value" id="fund-spent">¥0</div>
+          <div class="fund-sub" id="fund-spent-sub">还没有开始花钱</div>
+        </div>
+        <div class="fund">
+          <div class="fund-label">消费进度</div>
+          <div class="fund-value" id="fund-percent">0%</div>
+          <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="fund-bar"></div></div>
+        </div>
+      </div>
+
+      <div class="head-actions">
+        <button class="btn btn-ghost" type="button" data-act="reset" title="清空存档，重新开始">重开一局</button>
+      </div>
+    </div>
+
+    <div class="head-tools">
+      <label class="search" for="search-input">
+        <span class="search-icon" aria-hidden="true">🔍</span>
+        <input id="search-input" type="search" placeholder="搜索商品 / 品牌 / 分类，比如 iPhone、火箭、榴莲" autocomplete="off" spellcheck="false" aria-label="搜索商品">
+        <button class="search-clear" id="search-clear" type="button" aria-label="清空搜索" hidden>✕</button>
+      </label>
+      <div class="cats-wrap">
+        <nav class="cats" id="cats" aria-label="商品分类"></nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== 主体：商品网格 + 购物清单 ===== -->
+  <main class="workspace">
+    <section class="catalog" aria-label="商品列表">
+      <div class="catalog-bar">
+        <div class="catalog-count" id="result-count">商品库加载中…</div>
+        <div class="catalog-tip" id="catalog-tip">滚轮继续探索 · 全部商品均为虚拟消费</div>
+      </div>
+
+      <div class="grid-scroll" id="grid-scroll">
+        <div class="grid-sizer" id="grid-sizer">
+          <div class="grid-window" id="grid-window"></div>
+        </div>
+        <div class="grid-empty" id="grid-empty" hidden>
+          <div class="empty-emoji" id="empty-emoji">🛒</div>
+          <h3 id="empty-title">什么都没有找到</h3>
+          <p id="empty-desc">换个关键词，或者看看全部分类吧。</p>
+          <button class="btn btn-primary" type="button" id="empty-reset">看看全部商品</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="cart-panel" id="cart-panel" aria-label="购物清单">
+      <div class="cart-head">
+        <div>
+          <h2>购物清单</h2>
+          <p id="cart-summary">还没有买东西</p>
+        </div>
+        <button class="cart-close" type="button" data-act="close-cart" aria-label="关闭购物清单">✕</button>
+      </div>
+      <div class="cart-list" id="cart-list"></div>
+      <div class="cart-foot">
+        <div class="cart-total">
+          <span>清单总价值</span>
+          <strong id="cart-total">¥0</strong>
+        </div>
+        <div class="cart-actions">
+          <button class="btn btn-danger-soft" type="button" data-act="clear-cart">清空清单</button>
+          <button class="btn btn-soft" type="button" data-act="reset">重开一局</button>
+        </div>
+        <p class="cart-hint">卖出按买入原价退款；数据仅保存在本机浏览器。全部为虚拟娱乐模拟，不涉及真实交易。</p>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="app-foot">
+    花光马斯克的钱 · 纯前端娱乐模拟器 · 所有金额均为虚拟设定，不涉及任何真实交易
+  </footer>
+</div>
+
+<!-- 移动端悬浮清单入口 -->
+<button class="fab-cart" type="button" data-act="open-cart" aria-label="打开购物清单">
+  <span class="fab-icon">🧾</span>
+  <span class="fab-text">清单</span>
+  <span class="fab-badge" id="fab-badge">0</span>
+</button>
+<div class="cart-overlay" id="cart-overlay" hidden></div>
+
+<!-- 特效与浮层容器 -->
+<canvas id="fx-canvas" aria-hidden="true"></canvas>
+<div class="reward-layer" id="reward-layer" aria-label="下单成功卡片"></div>
+<div class="toast-layer" id="toast-layer" aria-live="polite"></div>
+<div class="modal-layer" id="modal-layer"></div>
+
+<noscript>
+  <div class="noscript">这个网站需要开启 JavaScript 才能玩，请在浏览器设置里启用后刷新。</div>
+</noscript>
+
+<!-- GSAP：CDN 加载失败时置标记，动画会降级为 CSS keyframes -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" onerror="window.__GSAP_MISSING__ = true;"></script>
+
+<!-- 商品数据（由数据模块提供；缺失时页面使用占位与加载态，不会报错） -->
+<script src="src/data/categories.js"></script>
+<script src="src/data/products.js"></script>
+
+<!-- 状态与经济系统 -->
+<script src="src/store.js"></script>
+<script src="src/economy.js"></script>
+<script src="src/achievements.js"></script>
+
+<!-- 动效工具 -->
+<script src="src/effects/tween.js"></script>
+<script src="src/effects/motion.js"></script>
+<script src="src/effects/confetti.js"></script>
+
+<!-- 界面模块 -->
+<script src="src/ui/theme.js"></script>
+<script src="src/ui/toast.js"></script>
+<script src="src/ui/modal.js"></script>
+<script src="src/ui/header.js"></script>
+<script src="src/ui/categories.js"></script>
+<script src="src/ui/search.js"></script>
+<script src="src/ui/grid.js"></script>
+<script src="src/ui/reward.js"></script>
+<script src="src/ui/cart.js"></script>
+
+<!-- 启动 -->
+<script src="src/app.js"></script>
+</body>
+</html>
